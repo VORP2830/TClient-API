@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clients-api
+    depends_on:
+      - postgres
+    environment:
+      DATABASE: Host=postgres;Database=Clients;Username=postgres;Password=senha
+    ports:
+      - "80:80" 
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
